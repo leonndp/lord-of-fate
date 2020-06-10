@@ -13,37 +13,43 @@ client.on('ready', () => {
 client.on('message', receivedMessage => {
     const prefix = '!'
 
+    const parsed = parser.parse(receivedMessage, prefix)
+
     if (receivedMessage.author == client.user) {
         return
     }
 
-    const parsed = parser.parse(receivedMessage, prefix)
-
     if (!parsed.success) return
 
-    if (parsed.command === 'roll') {
-        rollCommand(parsed.arguments, receivedMessage)
-    }
+    switch (parsed.command) {
+        case 'help':
+        case 'h':
+            helpCommand(parsed.arguments, receivedMessage)
+            break
 
-    // console.log(parsed)
+        case 'roll':
+        case 'r':
+            rollCommand(parsed.arguments, receivedMessage)
+            break
+
+        default:
+            receivedMessage.channel.send("I don't understand that command. Try !help")
+            break
+    }
 })
-
-const processCommand = receivedMessage => {
-    const prefix = '!'
-
-    const parsed = parser.parse(receivedMessage, prefix)
-    if (!parsed.success) return
-
-    if (parsed.command === 'roll') {
-        rollCommand(args, receivedMessage)
-    }
-}
 
 const helpCommand = (args, receivedMessage) => {
     if (args.length === 0) {
-        receivedMessage.channel.send("**!help / !h:** List all commands for Lord of Fate, or input a specific command as an argument; !help <command without prefix>\n**!roll / !r: Roll 4 fate dice; !roll <+/-*> <integer>")
+        receivedMessage.channel.send("**!help / !h:** List all commands for Lord of Fate, or input a specific command as an argument; !help <command without prefix>\n**!roll / !r**: Roll 4 fate dice; !roll <+/-*> <integer>")
     } else {
-        receivedMessage.channel.send('It looks like you need help with ' + args)
+        switch (args[0]) {
+            case 'help':
+            case 'h':
+                receivedMessage.channel.send("**!help / !h:** List all commands for Lord of Fate, or input a specific command as an argument; !help [command without prefix]")
+            case 'roll':
+            case 'r':
+                receivedMessage.channel.send("**!roll / !r:** Roll 4 fate dice; !roll [+/-*] [integer]")
+        }
     }
 }
 
@@ -60,18 +66,14 @@ const rollCommand = (args, receivedMessage) => {
     }
 
     mods.unshift(String(rollsResult))
-
-    if (!'+-/*'.includes(args[0])) {
-        receivedMessage.channel.send(`Invalid arguments! Try !help`)
-    } else {
-        try {
-            receivedMessage.channel.send(`
+    try {
+        receivedMessage.channel.send(`
                 ${receivedMessage.author}\n**ROLL:** [${rolls.join(', ')}] = ${rollsResult}\n**FINAL:** ${mexp.eval(mods.join(''))}
             `)
-        } catch (err) {
-            receivedMessage.channel.send(`${receivedMessage.author}\n${err.message}`)
-        }
+    } catch (err) {
+        receivedMessage.channel.send(`${receivedMessage.author}\n${err.message}`)
     }
+    console.log(args)
 }
 
 client.login(botKey)
