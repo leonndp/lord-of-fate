@@ -40,15 +40,15 @@ client.on('message', receivedMessage => {
 
 const helpCommand = (args, receivedMessage) => {
     if (args.length === 0) {
-        receivedMessage.channel.send("**!help / !h:** List all commands for Lord of Fate, or input a specific command as an argument; !help <command without prefix>\n**!roll / !r**: Roll 4 fate dice; !roll <+/-*> <integer>")
+        receivedMessage.channel.send("\`!help / !h: List all commands for Lord of Fate, or input a specific command as an argument; !help [command without prefix]\n!roll / !r: Roll 4 fate dice; !roll [+/-*] [integer]\`")
     } else {
         switch (args[0]) {
             case 'help':
             case 'h':
-                receivedMessage.channel.send("**!help / !h:** List all commands for Lord of Fate, or input a specific command as an argument; !help [command without prefix]")
+                receivedMessage.channel.send("\`!help / !h: List all commands for Lord of Fate, or input a specific command as an argument; !help [command without prefix]\`")
             case 'roll':
             case 'r':
-                receivedMessage.channel.send("**!roll / !r:** Roll 4 fate dice; !roll [+/-*] [integer]")
+                receivedMessage.channel.send("\`!roll / !r: Roll 4 fate dice; !roll [+/-*] [integer]\`")
         }
     }
 }
@@ -66,9 +66,10 @@ const rollCommand = (args, receivedMessage) => {
     }
 
     mods.unshift(String(rollsResult))
+
     try {
         receivedMessage.channel.send(`
-                ${receivedMessage.author}\n**ROLL:** [${rolls.join(', ')}] = ${rollsResult}\n**FINAL:** ${mexp.eval(mods.join(''))}
+                ${receivedMessage.author}\n**ROLL:** \`[${rolls.join(', ')}]\` = ${rollsResult}\n**FINAL:** ${mexp.eval(mods.join(''))}
             `)
     } catch (err) {
         receivedMessage.channel.send(`${receivedMessage.author}\n${err.message}`)
