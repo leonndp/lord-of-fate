@@ -8,6 +8,12 @@ const botKey = process.env.BOT_KEY
 
 client.on('ready', () => {
     console.log(`Connected as ${client.user.tag}`)
+    client.user.setPresence({
+        activity: {
+            name: 'FateCore | !help'
+        },
+        status: 'available'
+    })
 })
 
 client.on('message', receivedMessage => {
