@@ -65,7 +65,7 @@ const rollCommand = (args, receivedMessage) => {
         rollsResult += randomNumber
     }
 
-    if (mods.length > 0 && !!Number(mods[0])) {
+    if (mods.length > 0 && !!Number(mods.join('').split('')[0])) {
         mods.unshift('+')
     }
 
