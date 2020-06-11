@@ -65,6 +65,10 @@ const rollCommand = (args, receivedMessage) => {
         rollsResult += randomNumber
     }
 
+    if (mods.length > 0 && !!Number(mods[0])) {
+        mods.unshift('+')
+    }
+
     mods.unshift(String(rollsResult))
 
     try {
@@ -72,7 +76,7 @@ const rollCommand = (args, receivedMessage) => {
                 ${receivedMessage.author}\n**ROLL:** \`[${rolls.join(', ')}]\` = ${rollsResult}\n**FINAL:** ${mexp.eval(mods.join(''))}
             `)
     } catch (err) {
-        receivedMessage.channel.send(`${receivedMessage.author}\n${err.message}`)
+        receivedMessage.channel.send(`${receivedMessage.author}\n\`ERROR:${err.message}\``)
     }
     console.log(args)
 }
